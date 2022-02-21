@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import Mine from './Mine';
 import Flag from './Flag';
-import params from './params';
+import params from '.././params';
 
 export default props => {
   const {mined, opened, nearMines, exploded, flagged} = props;
