@@ -29,7 +29,9 @@ class App extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Iniciando o Mines</Text>
+        <Text style={styles.welcome}>
+          Iniciando o Mines {params.getColumnsAmount()}x{params.getRowsAmount()}
+        </Text>
         <View>
           <MineField board={this.state.board} />
         </View>
@@ -46,7 +48,7 @@ const styles = StyleSheet.create({
   },
   board: {
     alignItems: 'center',
-    backgroundColor: '#aaa',
+    backgroundColor: '#aff',
   },
 });
 
