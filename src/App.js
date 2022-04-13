@@ -1,10 +1,17 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, Alert} from 'react-native';
 import Field from './components/Field';
 import Flag from './components/Flag';
 import params from './params';
 import MineField from './components/MineField';
-import {createMinedBoard} from './functions';
+import {
+  createMinedBoard,
+  cloneBoard,
+  openField,
+  hadExplosion,
+  wonGame,
+  showMines 
+} from './functions';
 
 class App extends Component {
   constructor(props) {
@@ -23,9 +30,28 @@ class App extends Component {
     const rows = params.getRowsAmount();
     return {
       board: createMinedBoard(rows, cols, this.minesAmount()),
+      won: false,
+      loat: false
     };
   };
 
+  onOpenField = (row, column) =>{
+    const board = cloneBoard (this.state.board);
+    openField(board, row, column);
+    const lost = hadExplosion(board);
+    const won = wonGame(board);
+
+    if (lost){
+      showMines(board)
+      Alert.alert('Perdeu playboy!')
+    }
+
+    if(won){
+      Alert.alert('Parabéns, você venceu!')
+    }
+
+    this.setState({ board, lost, won })
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -33,7 +59,8 @@ class App extends Component {
           Iniciando o Mines {params.getColumnsAmount()}x{params.getRowsAmount()}
         </Text>
         <View>
-          <MineField board={this.state.board} />
+          <MineField board={this.state.board} 
+          onOpenField={this.onOpenField}/>
         </View>
       </View>
     );
@@ -44,7 +71,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-end',
-    // alignItems: 'center',
   },
   board: {
     alignItems: 'center',

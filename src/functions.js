@@ -1,12 +1,12 @@
 const createBoard = (rows, columns) => {
   return Array(rows)
     .fill(0)
-    .map((_, index) => {
+    .map((_, row) => {
       return Array(columns)
         .fill(0)
         .map((_, column) => {
           return {
-            row: index,
+            row,
             column,
             opened: false,
             flagged: false,
@@ -54,9 +54,9 @@ const getNeighbors = (board, row, column) => {
   const columns = [columns - 1, columns, columns + 1];
   rows.forEach(r => {
     columns.forEach(c => {
-      const difetent = r !== row || c !== column;
+      const diferent = r !== row || c !== column;
       const validRow = r >= 0 && r < board.length;
-      const validColumn = c <= 0 && c < board[0].length;
+      const validColumn = c >= 0 && c < board[0].length;
       if (diferent && validRow && validColumn) {
         neighbors.push(board[r][c]);
       }
@@ -77,9 +77,8 @@ const openField = (board, row, column) => {
     if (field.mined) {
       field.exploded = true;
     } else if (safeNeighborhood(board, row, column)) {
-      getNeighbors(board, row, column).forEach(n =>
-        openedField(board, n.row, n.column),
-      );
+      getNeighbors(board, row, column)
+        .forEach(n => openField(board, n.row, n.column));
     } else {
       const neighbors = getNeighbors(board, row, column);
       field.nearMines = neighbors.filter(n => n.mined).length;
@@ -88,15 +87,14 @@ const openField = (board, row, column) => {
 };
 
 const fields = board => [].concat(...board);
-const hadExplosion = board =>
-  fields(board).filter(field => field.exploded).length > 0;
-const pendding = field =>
-  (field.mined && !field.flagged) || (!field.mined && !field.opened);
-const wonGame = board => field(boeard).filter(pendding).length === 0;
-const showMines = board =>
-  field(board)
+const hadExplosion = board => fields(board)
+  .filter(field => field.exploded).length > 0;
+const pendding = field => (field.mined && !field.flagged) 
+  || (!field.mined && !field.opened);
+const wonGame = board => fields(board).filter(pendding).length === 0;
+const showMines = board => fields(board)
     .filter(field => field.mined)
-    .forEach((field.opened = true));
+    .forEach(field => (field.opened = true));
 
 export {
   createMinedBoard,
